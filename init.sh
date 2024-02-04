@@ -63,7 +63,6 @@ echo -e "\033[32m    init k3s config.  \033[0m"
 K3S_CONF=`cat<<EOF
 cluster-cidr: $CLUSTER_CIDR
 service-cidr: $SERVICE_CIDR
-data-dir: $DATA_DIR
 snapshotter: fuse-overlayfs
 disable:
 - servicelb
