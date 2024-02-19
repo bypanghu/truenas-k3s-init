@@ -8,6 +8,7 @@ controller:
     default: true
 
   config:
+    allow-snippet-annotations : "true"
     use-gzip: "true"
     gzip-level: "4"
     gzip-min-length: "256"
