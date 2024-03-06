@@ -12,18 +12,27 @@ controllers:
       main:
         order: 1
         image:
-          repository: esphome/esphome
-          tag: stable
+          repository: jlesage/handbrake
+          tag: v24.03.1
           pullPolicy: IfNotPresent
         env:
           TZ: Asia/Shanghai
-          # ESPHOME_DASHBOARD_USE_PING: true
-          # ESPHOME_DASHBOARD_RELATIVE_URL: "/"
-          # ESPHOME_QUICKWIZARD:
-          # ESPHOME_IS_HASSIO:
-          # DISABLE_HA_AUTHENTICATION:
-          # USERNAME:
-          # PASSWORD:
+          USER_ID: 0
+          GROUP_ID: 0
+          SUP_GROUP_IDS: "33,1000"
+          LANG: en_US.UTF-8
+          CONTAINER_DEBUG: 0
+          DISPLAY_WIDTH: 1920
+          DISPLAY_HEIGHT: 1080
+          DARK_MODE: 0
+          ENABLE_CJK_FONT: 0
+          HANDBRAKE_DEBUG: 0
+          HANDBRAKE_GUI: 1
+          #AUTOMATED_CONVERSION_PRESET: 'custom/fast-1k-h265-qc20'
+          #AUTOMATED_CONVERSION_PRESET_2: 'custom/fast-4k-h265-qc23'
+          #AUTOMATED_CONVERSION_KEEP_SOURCE: 1
+          #AUTOMATED_CONVERSION_OVERWRITE_OUTPUT: 0
+          #AUTOMATED_CONVERSION_CHECK_INTERVAL: 30
         probes:
           liveness:
             enabled: false
@@ -40,7 +49,7 @@ service:
     ports:
       http:
         enabled: true
-        port: 6052
+        port: 5800
 
 ingress:
   main:
@@ -50,24 +59,19 @@ ingress:
       helm.sh/resource-policy: keep
       kubernetes.io/tls-acme: "true"
       cert-manager.io/cluster-issuer: example.com-letsencrypt-issuer
-      nginx.ingress.kubernetes.io/server-snippet: |-
-        allow 10.0.0.0/8;
-        allow 172.16.0.0/12;
-        allow 192.168.0.0/16;
-        deny all;
     ingressClassName: "nginx"
     hosts:
-      - host: esp.example.com
+      - host: hb.example.com
         paths:
         - path: /
           pathType: Prefix
           service:
-            name: esphome
-            port: 6052
+            name: handbrake
+            port: 5800
     tls:
     - hosts:
-      - esp.example.com
-      secretName: esp.example.com-tls      
+      - hb.example.com
+      secretName: hb.example.com-tls      
 
 persistence:
   config:
@@ -83,4 +87,20 @@ persistence:
         main:  # the container with the "main"
         - path: /config
           readOnly: false
-          
+
+  # media:
+  #   enabled: true
+  #   type: hostPath
+  #   hostPath: /mnt/media
+  #   advancedMounts:
+  #     main:
+  #       main:
+  #       - path: /watch
+  #         readOnly: false
+  #         subPath: fast-1k-h265-qc20
+  #       - path: /watch2
+  #         readOnly: false
+  #         subPath: fast-4k-h265-qc23
+  #       - path: /output
+  #         readOnly: false
+  #         subPath: output

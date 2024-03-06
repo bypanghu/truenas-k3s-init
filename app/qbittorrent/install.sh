@@ -4,8 +4,8 @@ cd `dirname $0`
 source ../../common.sh
 source ../../parameter.sh
 
-NS=jellyfin
-APP_NAME=jellyfin
+NS=qbittorrent
+APP_NAME=qbittorrent
 
 # initial
 #####################################
